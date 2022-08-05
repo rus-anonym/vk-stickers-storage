@@ -1,0 +1,29 @@
+on:
+  push:
+    branches: [master, dev]
+  pull_request:
+    branches: [master]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      TOKEN: ${{ secrets.TOKEN_VK_USER }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "17"
+      - name: Preconfigure
+        run: |
+          rm -rf .git
+          mkdir static
+          cd ./static
+          git init
+          git checkout --orphan static
+          git config --global user.name 'RusAnonym'
+          git config --global user.email 'RusAnonym@users.noreply.github.com'
+          git remote add origin https://${{ secrets.TOKEN_GITHUB }}@github.com/rus-anonym/vk-stickers-storage.git
+      - run: git init
+      - run: git checkout --orphan static
+      - run: npm install --legacy-peer-deps
+      - run: node main.js
