@@ -1,8 +1,7 @@
 on:
-  push:
-    branches: [master, dev]
-  pull_request:
-    branches: [master]
+    workflow_dispatch:
+    schedule:
+        - cron: 0 0 * * 0
 jobs:
   deploy:
     runs-on: ubuntu-latest
